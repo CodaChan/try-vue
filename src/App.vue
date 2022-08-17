@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { nextTick, reactive, ref } from "vue";
+import { nextTick, reactive, ref, computed } from "vue";
+import ClassBind from "./ClassBind.vue";
 
 const rawHtml = ref("<span style='color: red'>Red Text</span>");
 
@@ -77,6 +78,17 @@ const reactiveObj = reactive({
   foo: ref(0),
 });
 const map = new Map([["foo", ref(0)]]);
+
+const firstName = ref("Coda");
+const lastName = ref("Chan");
+const fullName = computed({
+  set(name: string) {
+    [firstName.value, lastName.value] = name.split(" ");
+  },
+  get() {
+    return " " + firstName.value + " & " + lastName.value;
+  },
+});
 </script>
 
 <template>
@@ -141,6 +153,14 @@ const map = new Map([["foo", ref(0)]]);
     {{ object.foo.value + 1 }} {{ foo + 1 }} {{ object.foo }}
     {{ reactiveObj.foo + 1 }} {{ map.get("foo")?.value }}
   </p>
+
+  <p>
+    <button @click="fullName = 'Coda Chan'">Coda Chan</button>
+    <button @click="fullName = 'Xiao Yang'">Xiao Yang</button>
+    <span>{{ fullName }}</span>
+  </p>
+
+  <ClassBind />
 </template>
 
 <style>
